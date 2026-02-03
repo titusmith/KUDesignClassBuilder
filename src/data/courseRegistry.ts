@@ -61,7 +61,7 @@ export const courseRegistry: Course[] = [
   createCourse("ILLU", "510"),
   // IXD
   createCourse("IXD", "402"),
-  createCourse("IXD", "404"),
+  createCourse("IXD", "404", { name: "Dataviz and Digital Storytelling" }),
   createCourse("IXD", "415"),
   createCourse("IXD", "432"),
   // VISC

@@ -134,30 +134,44 @@ export function CourseTile({
         {showCheckInsteadOfGrip ? (
           <>
             <Check className="h-3 w-3 shrink-0 text-muted-foreground" />
-            {/* Course name in instructor view - right after checkmark */}
-            <span className="text-sm font-medium">
-              {course.code}
-              {sectionProgress && sectionProgress.total > 1 && (
-                <span className="tabular-nums text-muted-foreground/70">
-                  {" "}
-                  ({sectionProgress.scheduled}/{sectionProgress.total})
+            {/* Course code and name in instructor view - right after checkmark */}
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="text-sm font-medium">
+                {course.code}
+                {sectionProgress && sectionProgress.total > 1 && (
+                  <span className="tabular-nums text-muted-foreground/70">
+                    {" "}
+                    ({sectionProgress.scheduled}/{sectionProgress.total})
+                  </span>
+                )}
+              </span>
+              {course.name && (
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  {course.name}
                 </span>
               )}
-            </span>
+            </div>
           </>
         ) : (
           <>
             <GripVertical className="h-3 w-3 shrink-0 text-muted-foreground" />
-            {/* Course name in course view - right after grip icon, moved to left */}
-            <span className="text-sm font-medium">
-              {course.code}
-              {sectionProgress && sectionProgress.total > 1 && (
-                <span className="tabular-nums text-muted-foreground/70">
-                  {" "}
-                  ({sectionProgress.scheduled}/{sectionProgress.total})
+            {/* Course code and name in course view - right after grip icon, moved to left */}
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="text-sm font-medium">
+                {course.code}
+                {sectionProgress && sectionProgress.total > 1 && (
+                  <span className="tabular-nums text-muted-foreground/70">
+                    {" "}
+                    ({sectionProgress.scheduled}/{sectionProgress.total})
+                  </span>
+                )}
+              </span>
+              {course.name && (
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  {course.name}
                 </span>
               )}
-            </span>
+            </div>
           </>
         )}
         {badge}
