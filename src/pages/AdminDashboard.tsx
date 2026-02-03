@@ -21,6 +21,7 @@ import {
 import type { Conflict } from "@/data/schedulerTypes";
 import { FocusModeBar } from "@/components/scheduler/FocusModeBar";
 import { facultyRoster } from "@/data/facultyRoster";
+import { cn } from "@/lib/utils";
 
 export function AdminDashboard() {
   const [assignments, setAssignments] = useState<ScheduleAssignment[]>([]);
