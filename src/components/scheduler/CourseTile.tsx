@@ -51,6 +51,8 @@ interface CourseTileProps {
   showCheckInsteadOfGrip?: boolean;
   /** Visually deemphasize card (used for grid filters) */
   dimmed?: boolean;
+  /** When true, this course is currently being placed on the grid */
+  isPlacementActive?: boolean;
 }
 
 export function CourseTile({
@@ -79,6 +81,7 @@ export function CourseTile({
   draggable = true,
   showCheckInsteadOfGrip = false,
   dimmed = false,
+  isPlacementActive = false,
 }: CourseTileProps) {
   const [popoverOpen, setPopoverOpen] = useState(false);
 
@@ -246,11 +249,20 @@ export function CourseTile({
               <PopoverTrigger asChild>
                 <button
                   type="button"
-                  className="flex w-full min-w-max items-center gap-1 text-left text-xs text-muted-foreground hover:text-foreground hover:underline focus:outline-none focus:ring-1 focus:ring-ring rounded"
+                  className={cn(
+                    "flex w-full min-w-max items-center gap-1 text-left text-xs focus:outline-none focus:ring-1 focus:ring-ring rounded",
+                    isPlacementActive
+                      ? "text-primary font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:underline"
+                  )}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <UserPlus className="h-3.5 w-3.5 shrink-0" />
-                  <span>Click to assign instructor</span>
+                  <span>
+                    {isPlacementActive
+                      ? "Click a cell on the grid to place this course"
+                      : "Click to assign instructor"}
+                  </span>
                 </button>
               </PopoverTrigger>
               <PopoverContent

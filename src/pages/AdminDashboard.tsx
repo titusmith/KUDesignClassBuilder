@@ -201,7 +201,12 @@ export function AdminDashboard() {
 
   return (
     <div className="flex h-screen flex-col">
-      <header className="flex shrink-0 items-center justify-between gap-4 border-b px-4 py-3">
+      <header
+        className={cn(
+          "flex shrink-0 items-center justify-between gap-4 border-b px-4 py-3 transition-opacity",
+          pendingPlacement && "opacity-40"
+        )}
+      >
         <h1 className="text-lg font-semibold">
           Fall 2026 KU Design Class Scheduler
         </h1>
@@ -246,6 +251,7 @@ export function AdminDashboard() {
           onPlacementCancel={handlePlacementCancel}
           prefixFilter={sidebarPrefixFilter}
           onPrefixFilterChange={setSidebarPrefixFilter}
+          pendingPlacement={pendingPlacement}
         />
         <main className="flex-1 overflow-hidden p-4">
           <ScheduleGrid

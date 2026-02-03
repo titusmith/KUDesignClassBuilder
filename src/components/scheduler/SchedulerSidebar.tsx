@@ -53,6 +53,7 @@ interface SchedulerSidebarProps {
   onPlacementCancel?: () => void;
   prefixFilter?: string;
   onPrefixFilterChange?: (prefix: string) => void;
+  pendingPlacement?: { courseId: string; instructorId: string } | null;
 }
 
 function getInstructor(instructorId: string): Faculty | undefined {
@@ -97,6 +98,7 @@ export function SchedulerSidebar({
   onPlacementCancel,
   prefixFilter = "",
   onPrefixFilterChange,
+  pendingPlacement,
 }: SchedulerSidebarProps) {
   const [apptOpen, setApptOpen] = useState(false);
   const [addCourseInstructor, setAddCourseInstructor] = useState<Faculty | null>(null);
@@ -202,7 +204,10 @@ export function SchedulerSidebar({
     <Tabs
       defaultValue="courses"
       onValueChange={() => onPlacementCancel?.()}
-      className="flex w-64 shrink-0 flex-col overflow-hidden border-r bg-sidebar text-sidebar-foreground"
+      className={cn(
+        "flex w-64 shrink-0 flex-col overflow-hidden border-r bg-sidebar text-sidebar-foreground transition-opacity",
+        pendingPlacement && "opacity-40 pointer-events-none"
+      )}
     >
       <div className="border-b bg-muted/80 p-3 backdrop-blur-sm">
         <h2 className="font-semibold">Fall 2026 Schedule</h2>
@@ -309,6 +314,9 @@ export function SchedulerSidebar({
                   : undefined;
               const scheduledLabelScrollable = allScheduled && scheduledCount >= 2;
 
+              const isPlacementActive =
+                !!pendingPlacement && pendingPlacement.courseId === course.id;
+
               return (
                 <div key={course.id} className="min-w-0">
                   <CourseTile
@@ -339,6 +347,7 @@ export function SchedulerSidebar({
                           }
                         : undefined
                     }
+                    isPlacementActive={isPlacementActive}
                     badge={
                       allScheduled ? undefined : scheduledCount > 0 ? (
                         <Badge variant="secondary" className="text-xs shrink-0">
