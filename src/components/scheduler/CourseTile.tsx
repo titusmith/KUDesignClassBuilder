@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Course, Faculty } from "@/data/schedulerTypes";
 import { cn } from "@/lib/utils";
-import { GripVertical, Check, X, ChevronDown, UserPlus } from "lucide-react";
+import { GripVertical, X, ChevronDown, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -129,11 +129,9 @@ export function CourseTile({
       draggable={draggable}
       onDragStart={handleDragStart}
     >
-      {/* Top row: icon + scrollable course code/name + badge + remove */}
+      {/* Top row: icon (course view only) + scrollable course code/name + badge + remove */}
       <div className="flex items-center justify-between gap-1">
-        {showCheckInsteadOfGrip ? (
-          <Check className="h-3 w-3 shrink-0 text-muted-foreground" />
-        ) : (
+        {!showCheckInsteadOfGrip && (
           <GripVertical className="h-3 w-3 shrink-0 text-muted-foreground" />
         )}
         {/* Course code and name - horizontally scrollable */}
