@@ -129,51 +129,32 @@ export function CourseTile({
       draggable={draggable}
       onDragStart={handleDragStart}
     >
-      {/* Top row: icon + course name (left) + badge + remove */}
+      {/* Top row: icon + scrollable course code/name + badge + remove */}
       <div className="flex items-center justify-between gap-1">
         {showCheckInsteadOfGrip ? (
-          <>
-            <Check className="h-3 w-3 shrink-0 text-muted-foreground" />
-            {/* Course code and name in instructor view - right after checkmark */}
-            <div className="flex items-center gap-1.5 min-w-0">
-              <span className="text-sm font-medium">
-                {course.code}
-                {sectionProgress && sectionProgress.total > 1 && (
-                  <span className="tabular-nums text-muted-foreground/70">
-                    {" "}
-                    ({sectionProgress.scheduled}/{sectionProgress.total})
-                  </span>
-                )}
-              </span>
-              {course.name && (
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {course.name}
-                </span>
-              )}
-            </div>
-          </>
+          <Check className="h-3 w-3 shrink-0 text-muted-foreground" />
         ) : (
-          <>
-            <GripVertical className="h-3 w-3 shrink-0 text-muted-foreground" />
-            {/* Course code and name in course view - right after grip icon, moved to left */}
-            <div className="flex items-center gap-1.5 min-w-0">
-              <span className="text-sm font-medium">
-                {course.code}
-                {sectionProgress && sectionProgress.total > 1 && (
-                  <span className="tabular-nums text-muted-foreground/70">
-                    {" "}
-                    ({sectionProgress.scheduled}/{sectionProgress.total})
-                  </span>
-                )}
-              </span>
-              {course.name && (
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {course.name}
+          <GripVertical className="h-3 w-3 shrink-0 text-muted-foreground" />
+        )}
+        {/* Course code and name - horizontally scrollable */}
+        <div className="min-w-0 flex-1 overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:h-1">
+          <div className="min-w-max flex items-center gap-1.5">
+            <span className="text-sm font-medium whitespace-nowrap">
+              {course.code}
+              {sectionProgress && sectionProgress.total > 1 && (
+                <span className="tabular-nums text-muted-foreground/70">
+                  {" "}
+                  ({sectionProgress.scheduled}/{sectionProgress.total})
                 </span>
               )}
-            </div>
-          </>
-        )}
+            </span>
+            {course.name && (
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                {course.name}
+              </span>
+            )}
+          </div>
+        </div>
         {badge}
         {onRemove && (
           <Button
