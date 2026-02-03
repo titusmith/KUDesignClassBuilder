@@ -43,7 +43,7 @@ export function AdminDashboard() {
 
   // Focus mode "Programs" options for grid view
   const programFilterOptions = useMemo(
-    () => ["VISC", "IXD", "INDD", "ILLU", "ANIM"],
+    () => ["VISC", "IXD", "INDD", "ILLU", "ANIM", "MA"],
     []
   );
   const prefixOptions = programFilterOptions;

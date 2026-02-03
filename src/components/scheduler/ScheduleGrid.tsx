@@ -61,13 +61,18 @@ const BUILDING_ORDER = ["CHAL", "MAR", "CDR", "WES", "SUM", "LEEP2", "KS-ST", "S
 // VISC & IXD programs: VISC, IXD, BDS, ADS
 // INDD program: VISC, BDS, ADS
 // ILLU & ANIM programs: ILLU, ANIM, BDS, ADS
+// MA program: specific ADS courses (710, 765, 861, 890)
 const PROGRAM_TO_PREFIXES: Record<string, string[]> = {
   VISC: ["VISC", "IXD", "BDS", "ADS"],
   IXD: ["VISC", "IXD", "BDS", "ADS"],
   INDD: ["VISC", "BDS", "ADS"],
   ILLU: ["ILLU", "ANIM", "BDS", "ADS"],
   ANIM: ["ILLU", "ANIM", "BDS", "ADS"],
+  MA: ["ADS"], // Special case handled below by course code
 };
+
+// MA program specific course codes
+const MA_COURSE_CODES = ["ADS 710", "ADS 765", "ADS 861", "ADS 890"];
 
 function parseRoomNumber(code: string): string {
   const parts = code.split(/\s+/);
@@ -525,7 +530,13 @@ export function ScheduleGrid({
                 let isPrefixDimmed = false;
                 if (shouldFilterByPrefix && course) {
                   const coursePrefix = course.prefix;
+                  const courseCode = course.code;
                   const matchesSelectedProgram = prefixFilter.some((programId) => {
+                    // MA program is a special case - filter by specific course codes
+                    if (programId === "MA") {
+                      return MA_COURSE_CODES.includes(courseCode);
+                    }
+                    // Other programs filter by prefix
                     const allowedPrefixes = PROGRAM_TO_PREFIXES[programId] ?? [];
                     return allowedPrefixes.includes(coursePrefix);
                   });
