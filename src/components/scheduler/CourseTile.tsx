@@ -129,7 +129,7 @@ export function CourseTile({
       draggable={draggable}
       onDragStart={handleDragStart}
     >
-      {/* Top row: icon + (course name in instructor view) + badge + remove */}
+      {/* Top row: icon + course name (left) + badge + remove */}
       <div className="flex items-center justify-between gap-1">
         {showCheckInsteadOfGrip ? (
           <>
@@ -146,7 +146,19 @@ export function CourseTile({
             </span>
           </>
         ) : (
-          <GripVertical className="h-3 w-3 shrink-0 text-muted-foreground" />
+          <>
+            <GripVertical className="h-3 w-3 shrink-0 text-muted-foreground" />
+            {/* Course name in course view - right after grip icon, moved to left */}
+            <span className="text-sm font-medium">
+              {course.code}
+              {sectionProgress && sectionProgress.total > 1 && (
+                <span className="tabular-nums text-muted-foreground/70">
+                  {" "}
+                  ({sectionProgress.scheduled}/{sectionProgress.total})
+                </span>
+              )}
+            </span>
+          </>
         )}
         {badge}
         {onRemove && (
@@ -163,21 +175,9 @@ export function CourseTile({
           </Button>
         )}
       </div>
-      {/* Second row: course name (left) + instructor info (left) + course name again (right, grey) - horizontally scrollable */}
+      {/* Second row: instructor info + course name again (right, grey) - horizontally scrollable */}
       <div className="min-w-0 overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:h-1">
         <div className="min-w-max flex items-center gap-2">
-          {/* Course name on left - only show in course view (not instructor view) */}
-          {!showCheckInsteadOfGrip && (
-            <span className="text-sm font-medium whitespace-nowrap">
-              {course.code}
-              {sectionProgress && sectionProgress.total > 1 && (
-                <span className="tabular-nums text-muted-foreground/70">
-                  {" "}
-                  ({sectionProgress.scheduled}/{sectionProgress.total})
-                </span>
-              )}
-            </span>
-          )}
           {instructor && canChangeInstructor ? (
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>
