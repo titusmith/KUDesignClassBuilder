@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, RotateCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { facultyRoster } from "@/data/facultyRoster";
 
@@ -58,6 +58,12 @@ export function FocusModeBar({
     : instructorFilter.length === 0
       ? "None selected"
       : `${instructorFilter.length} selected`;
+
+  const handleResetFilters = () => {
+    onDayPatternFilterChange("all");
+    onPrefixFilterChange([...prefixOptions]);
+    onInstructorFilterChange([...instructorOptions]);
+  };
 
   return (
     <div className="flex items-center gap-0.5">
@@ -230,6 +236,19 @@ export function FocusModeBar({
           })}
         </DropdownMenuContent>
       </DropdownMenu>
+      <Button
+        variant="ghost"
+        size="sm"
+        disabled={!focusModeEnabled}
+        onClick={handleResetFilters}
+        className={cn(
+          "h-8 w-8 p-0",
+          !focusModeEnabled && "opacity-50"
+        )}
+        title="Reset all filters to 'All'"
+      >
+        <RotateCw className="h-4 w-4" />
+      </Button>
     </div>
   );
 }
