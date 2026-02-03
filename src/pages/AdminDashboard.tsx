@@ -40,12 +40,14 @@ export function AdminDashboard() {
   } | null>(null);
   const [findRoomModalOpen, setFindRoomModalOpen] = useState(false);
 
-  const prefixOptions = useMemo(() => {
-    const unique = Array.from(new Set(courseRegistry.map((c) => c.prefix)));
-    return unique.sort((a, b) => a.localeCompare(b));
-  }, []);
+  // Focus mode "Programs" options for grid view
+  const programFilterOptions = useMemo(
+    () => ["VISC", "IXD", "INDD", "ILLU", "ANIM"],
+    []
+  );
+  const prefixOptions = programFilterOptions;
   const [dayPatternFilter, setDayPatternFilter] = useState<"all" | DayPattern>("all");
-  const [gridPrefixFilter, setGridPrefixFilter] = useState<string[]>(prefixOptions);
+  const [gridPrefixFilter, setGridPrefixFilter] = useState<string[]>(programFilterOptions);
   const [focusModeEnabled, setFocusModeEnabled] = useState(false);
   const instructorOptions = useMemo(() => facultyRoster.map((f) => f.id), []);
   const [instructorFilter, setInstructorFilter] = useState<string[]>(instructorOptions);

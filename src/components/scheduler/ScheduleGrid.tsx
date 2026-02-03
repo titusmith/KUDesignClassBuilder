@@ -57,6 +57,18 @@ interface ScheduleGridProps {
 // Order: Chalmers, Marvin, CDR, Wescoe, Sum, LEEP, KS-ST, Snow. Room number in order within building.
 const BUILDING_ORDER = ["CHAL", "MAR", "CDR", "WES", "SUM", "LEEP2", "KS-ST", "SNOW"] as const;
 
+// Mapping from focus mode "Programs" options to underlying course prefixes
+// VISC & IXD programs: VISC, IXD, BDS, ADS
+// INDD program: VISC, BDS, ADS
+// ILLU & ANIM programs: ILLU, ANIM, BDS, ADS
+const PROGRAM_TO_PREFIXES: Record<string, string[]> = {
+  VISC: ["VISC", "IXD", "BDS", "ADS"],
+  IXD: ["VISC", "IXD", "BDS", "ADS"],
+  INDD: ["VISC", "BDS", "ADS"],
+  ILLU: ["ILLU", "ANIM", "BDS", "ADS"],
+  ANIM: ["ILLU", "ANIM", "BDS", "ADS"],
+};
+
 function parseRoomNumber(code: string): string {
   const parts = code.split(/\s+/);
   return parts[parts.length - 1] ?? "";
@@ -109,7 +121,6 @@ export function ScheduleGrid({
       timeBlocks.filter((tb) => tb.dayPattern !== dayPatternFilter).map((tb) => tb.id)
     );
   }, [focusModeEnabled, dayPatternFilter]);
-  const prefixFilterSet = useMemo(() => new Set(prefixFilter), [prefixFilter]);
   const instructorFilterSet = useMemo(() => new Set(instructorFilter), [instructorFilter]);
   const shouldFilterByPrefix =
     focusModeEnabled &&
@@ -511,8 +522,18 @@ export function ScheduleGrid({
                   isEmpty &&
                   isInstructorBusyAtThisTime;
 
+                let isPrefixDimmed = false;
+                if (shouldFilterByPrefix && course) {
+                  const coursePrefix = course.prefix;
+                  const matchesSelectedProgram = prefixFilter.some((programId) => {
+                    const allowedPrefixes = PROGRAM_TO_PREFIXES[programId] ?? [];
+                    return allowedPrefixes.includes(coursePrefix);
+                  });
+                  isPrefixDimmed = !matchesSelectedProgram;
+                }
+
                 const isCourseDimmed =
-                  (shouldFilterByPrefix && !!course && !prefixFilterSet.has(course.prefix)) ||
+                  isPrefixDimmed ||
                   (shouldFilterByInstructor &&
                     !!assignment &&
                     !instructorFilterSet.has(assignment.instructorId));

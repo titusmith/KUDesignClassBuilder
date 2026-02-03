@@ -37,7 +37,7 @@ import { getPrefixColor } from "@/data/prefixColors";
 import { roomInventory } from "@/data/roomInventory";
 import { timeBlocks } from "@/data/timeBlocks";
 
-const COURSE_PREFIXES = ["ADS", "ANIM", "INDD", "ILLU", "IXD", "VISC", "BDS"] as const;
+const COURSE_PREFIXES = ["VISC", "IXD", "ADS", "ILLU", "ANIM", "INDD", "BDS"] as const;
 
 // Mock APPT/Online sections - in real app these would come from data
 const apptOnlineCourses: Course[] = [
@@ -116,11 +116,19 @@ export function SchedulerSidebar({
   }, [assignments]);
 
   const mustScheduleCourses = useMemo(() => {
-    const filtered = courseRegistry.filter((c) => !c.isApptOrOnline);
-    if (prefixFilter) {
-      return filtered.filter((c) => c.prefix === prefixFilter);
-    }
-    return filtered;
+    const base = courseRegistry.filter((c) => !c.isApptOrOnline);
+    const filtered = prefixFilter ? base.filter((c) => c.prefix === prefixFilter) : base;
+
+    const prefixOrder = new Map(COURSE_PREFIXES.map((p, index) => [p, index]));
+
+    return [...filtered].sort((a, b) => {
+      const orderA = prefixOrder.get(a.prefix) ?? Number.MAX_SAFE_INTEGER;
+      const orderB = prefixOrder.get(b.prefix) ?? Number.MAX_SAFE_INTEGER;
+      if (orderA !== orderB) return orderA - orderB;
+
+      // Within same prefix, sort by course number naturally
+      return a.number.localeCompare(b.number, undefined, { numeric: true });
+    });
   }, [prefixFilter]);
 
   const unscheduledCount = useMemo(() => {
@@ -204,11 +212,15 @@ export function SchedulerSidebar({
             onValueChange={(v) => onPrefixFilterChange?.(v === "all" ? "" : v)}
           >
             <SelectTrigger className="h-8 w-full bg-background">
-              <SelectValue placeholder="All prefixes" />
+              <SelectValue placeholder="All Prefixes" />
             </SelectTrigger>
             <SelectContent>
+              <div className="flex items-center justify-between px-2 py-1 text-xs text-muted-foreground">
+                <span>All Prefixes</span>
+                <span>Select One</span>
+              </div>
               <SelectItem value="all">
-                <span className="flex items-center gap-1.5">All prefixes</span>
+                <span className="flex items-center gap-1.5">All Prefixes</span>
               </SelectItem>
               {COURSE_PREFIXES.map((p) => (
                 <SelectItem key={p} value={p}>

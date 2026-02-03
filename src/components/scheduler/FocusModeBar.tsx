@@ -51,13 +51,15 @@ export function FocusModeBar({
     ? "All"
     : prefixFilter.length === 0
       ? "None selected"
-      : `${prefixFilter.length} selected`;
+      : prefixFilter.join(", ");
   const allInstructorsSelected = instructorFilter.length === instructorOptions.length;
   const instructorSummary = allInstructorsSelected
     ? "All"
     : instructorFilter.length === 0
       ? "None selected"
-      : `${instructorFilter.length} selected`;
+      : instructorFilter
+          .map((id) => facultyRoster.find((f) => f.id === id)?.name ?? id)
+          .join(", ");
 
   const handleResetFilters = () => {
     onDayPatternFilterChange("all");
@@ -130,10 +132,10 @@ export function FocusModeBar({
               !focusModeEnabled && "opacity-50"
             )}
           >
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground shrink-0">
               Programs
             </span>
-            <span className="text-sm font-medium text-foreground/80">{prefixSummary}</span>
+            <span className="text-sm font-medium text-foreground/80 truncate min-w-0">{prefixSummary}</span>
             <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </DropdownMenuTrigger>
@@ -187,10 +189,10 @@ export function FocusModeBar({
               !focusModeEnabled && "opacity-50"
             )}
           >
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground shrink-0">
               Instructors
             </span>
-            <span className="text-sm font-medium text-foreground/80">{instructorSummary}</span>
+            <span className="text-sm font-medium text-foreground/80 truncate min-w-0">{instructorSummary}</span>
             <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </DropdownMenuTrigger>
