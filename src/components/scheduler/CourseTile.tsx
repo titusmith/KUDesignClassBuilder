@@ -129,22 +129,25 @@ export function CourseTile({
       draggable={draggable}
       onDragStart={handleDragStart}
     >
-      {/* Top row: course name + checkmark - static */}
+      {/* Top row: icon + (course name in instructor view) + badge + remove */}
       <div className="flex items-center justify-between gap-1">
         {showCheckInsteadOfGrip ? (
-          <Check className="h-3 w-3 shrink-0 text-muted-foreground" />
+          <>
+            <Check className="h-3 w-3 shrink-0 text-muted-foreground" />
+            {/* Course name in instructor view - right after checkmark */}
+            <span className="text-sm font-medium">
+              {course.code}
+              {sectionProgress && sectionProgress.total > 1 && (
+                <span className="tabular-nums text-muted-foreground/70">
+                  {" "}
+                  ({sectionProgress.scheduled}/{sectionProgress.total})
+                </span>
+              )}
+            </span>
+          </>
         ) : (
           <GripVertical className="h-3 w-3 shrink-0 text-muted-foreground" />
         )}
-        <span className="truncate text-sm font-medium">
-          {course.code}
-          {sectionProgress && sectionProgress.total > 1 && (
-            <span className="tabular-nums text-muted-foreground/70">
-              {" "}
-              ({sectionProgress.scheduled}/{sectionProgress.total})
-            </span>
-          )}
-        </span>
         {badge}
         {onRemove && (
           <Button
@@ -160,10 +163,22 @@ export function CourseTile({
           </Button>
         )}
       </div>
-      {/* Second row: teacher, day, time, room - horizontally scrollable */}
+      {/* Second row: course name (left) + instructor info (left) + course name again (right, grey) - horizontally scrollable */}
       <div className="min-w-0 overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:h-1">
-        <div className="min-w-max">
-      {instructor && canChangeInstructor ? (
+        <div className="min-w-max flex items-center gap-2">
+          {/* Course name on left - only show in course view (not instructor view) */}
+          {!showCheckInsteadOfGrip && (
+            <span className="text-sm font-medium whitespace-nowrap">
+              {course.code}
+              {sectionProgress && sectionProgress.total > 1 && (
+                <span className="tabular-nums text-muted-foreground/70">
+                  {" "}
+                  ({sectionProgress.scheduled}/{sectionProgress.total})
+                </span>
+              )}
+            </span>
+          )}
+          {instructor && canChangeInstructor ? (
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>
             <button
@@ -233,46 +248,56 @@ export function CourseTile({
         <span className="whitespace-nowrap text-xs text-muted-foreground">
           {scheduledLabel}
         </span>
-      ) : onAssignInstructor ? (
-        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-          <PopoverTrigger asChild>
-            <button
-              type="button"
-              className="flex w-full min-w-max items-center gap-1 text-left text-xs text-muted-foreground hover:text-foreground hover:underline focus:outline-none focus:ring-1 focus:ring-ring rounded"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <UserPlus className="h-3.5 w-3.5 shrink-0" />
-              <span>Click to assign instructor</span>
-            </button>
-          </PopoverTrigger>
-          <PopoverContent
-            className="w-56 bg-white p-2 shadow-lg dark:bg-zinc-900"
-            align="start"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="mb-2 text-xs font-medium text-muted-foreground">
-              Assign instructor
-            </p>
-            <InstructorCombobox
-              instructors={instructors}
-              onSelect={(value) => {
-                onAssignInstructor(value);
-                setPopoverOpen(false);
-              }}
-              isInstructorAtCapacity={isInstructorDisabled}
-              instructorWorkload={instructorWorkload}
-              maxLoad={maxInstructorLoad}
-              getDisabledMessage={getDisabledMessageForCombobox}
-              placeholder="Type to search..."
-            />
-          </PopoverContent>
-        </Popover>
-      ) : null}
-      {linkedRoomCode && isShadow && (
-        <span className="whitespace-nowrap text-xs text-muted-foreground">
-          Paired with {linkedRoomCode}
-        </span>
-      )}
+          ) : onAssignInstructor ? (
+            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="flex w-full min-w-max items-center gap-1 text-left text-xs text-muted-foreground hover:text-foreground hover:underline focus:outline-none focus:ring-1 focus:ring-ring rounded"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <UserPlus className="h-3.5 w-3.5 shrink-0" />
+                  <span>Click to assign instructor</span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-56 bg-white p-2 shadow-lg dark:bg-zinc-900"
+                align="start"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="mb-2 text-xs font-medium text-muted-foreground">
+                  Assign instructor
+                </p>
+                <InstructorCombobox
+                  instructors={instructors}
+                  onSelect={(value) => {
+                    onAssignInstructor(value);
+                    setPopoverOpen(false);
+                  }}
+                  isInstructorAtCapacity={isInstructorDisabled}
+                  instructorWorkload={instructorWorkload}
+                  maxLoad={maxInstructorLoad}
+                  getDisabledMessage={getDisabledMessageForCombobox}
+                  placeholder="Type to search..."
+                />
+              </PopoverContent>
+            </Popover>
+          ) : null}
+          {linkedRoomCode && isShadow && (
+            <span className="whitespace-nowrap text-xs text-muted-foreground">
+              Paired with {linkedRoomCode}
+            </span>
+          )}
+          {/* Course name again on right in grey */}
+          <span className="text-xs text-muted-foreground whitespace-nowrap ml-auto">
+            {course.code}
+            {sectionProgress && sectionProgress.total > 1 && (
+              <span className="tabular-nums">
+                {" "}
+                ({sectionProgress.scheduled}/{sectionProgress.total})
+              </span>
+            )}
+          </span>
         </div>
       </div>
     </div>
