@@ -189,9 +189,9 @@ export function CourseTile({
           </Button>
         )}
       </div>
-      {/* Second row: instructor info + course name again (right, grey) - horizontally scrollable */}
+      {/* Second row: instructor info - horizontally scrollable */}
       <div className="min-w-0 overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:h-1">
-        <div className="min-w-max flex items-center gap-2">
+        <div className="min-w-max">
           {instructor && canChangeInstructor ? (
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>
@@ -302,16 +302,6 @@ export function CourseTile({
               Paired with {linkedRoomCode}
             </span>
           )}
-          {/* Course name again on right in grey */}
-          <span className="text-xs text-muted-foreground whitespace-nowrap ml-auto">
-            {course.code}
-            {sectionProgress && sectionProgress.total > 1 && (
-              <span className="tabular-nums">
-                {" "}
-                ({sectionProgress.scheduled}/{sectionProgress.total})
-              </span>
-            )}
-          </span>
         </div>
       </div>
     </div>
