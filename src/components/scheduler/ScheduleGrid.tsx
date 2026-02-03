@@ -99,6 +99,7 @@ export function ScheduleGrid({
   onPrefixFilterChange,
   prefixOptions,
   focusModeEnabled,
+  instructorFilter,
 }: ScheduleGridProps) {
   const sortedRooms = useMemo(() => sortRooms(roomInventory), []);
   const [pendingLinkedRoom, setPendingLinkedRoom] = useState<PendingLinkedRoom | null>(null);
